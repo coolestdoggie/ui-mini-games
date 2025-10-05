@@ -23,11 +23,18 @@ namespace CodeBase.Infrastructure.States
     {
       _timeService.StartTicking();
       _cardsService.CardMovedToRightDeck += UpdateDeckCounterLabels;
+      _cardsService.AllCardsMovedToRight += MoveToNextState;
+    }
+
+    private void MoveToNextState()
+    {
+      _stateMachine.Enter<EndState>();
     }
 
     public void Exit()
     {
       _cardsService.CardMovedToRightDeck -= UpdateDeckCounterLabels;
+      _cardsService.AllCardsMovedToRight -= MoveToNextState;
     }
 
     private void UpdateDeckCounterLabels(int leftDeckCount, int rightDeckCount)

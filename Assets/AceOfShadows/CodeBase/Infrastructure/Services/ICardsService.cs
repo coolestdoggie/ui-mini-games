@@ -8,5 +8,6 @@ namespace CodeBase.Services
         event Action<int, int> CardMovedToRightDeck;
         int LeftDeckCardsAmount { get; }
         int RightDeckCardsAmount { get; }
+        event Action AllCardsMovedToRight;
     }
 }

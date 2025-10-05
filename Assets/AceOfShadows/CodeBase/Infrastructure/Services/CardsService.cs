@@ -9,6 +9,7 @@ namespace CodeBase.Services
     public class CardsService : ICardsService
     {
         public event Action<int, int> CardMovedToRightDeck;
+        public event Action AllCardsMovedToRight;
 
         public int LeftDeckCardsAmount { get; private set; }
         public int RightDeckCardsAmount { get; private set; }
@@ -75,6 +76,7 @@ namespace CodeBase.Services
             {
                 Debug.Log("[CardsService] Left deck is empty. Stopping card movement.");
                 _timeService.SecondTick -= MoveCardFromLeftToRight;
+                AllCardsMovedToRight?.Invoke();
                 return;
             }
 

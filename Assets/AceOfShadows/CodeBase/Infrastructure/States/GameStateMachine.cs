@@ -19,6 +19,7 @@ namespace CodeBase.Infrastructure.States
           services.Single<IGameFactory>(), services.Single<ICardsService>()),
         [typeof(GameLoopState)] = new GameLoopState(this,services.Single<ITimeService>(),
           services.Single<ICardsService>(), services.Single<IGameFactory>()),
+        [typeof(EndState)] = new EndState(services.Single<IGameFactory>()),
       };
     }
     
