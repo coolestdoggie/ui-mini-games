@@ -31,9 +31,11 @@ namespace CodeBase.Infrastructure.States
     private void RegisterServices()
     {
       _services.RegisterSingle<IGameStateMachine>(_stateMachine);
+      _services.RegisterSingle<IConfigsService>(new ConfigsService());
       _services.RegisterSingle<ITimeService>(new TimeService());
       _services.RegisterSingle<IGameFactory>(new GameFactory());
-      _services.RegisterSingle<ICardsService>(new CardsService(_services.Single<IGameFactory>(), _services.Single<ITimeService>()));
+      _services.RegisterSingle<ICardsService>(new CardsService(_services.Single<IGameFactory>(),
+        _services.Single<ITimeService>(), _services.Single<IConfigsService>()));
     }
   }
 }

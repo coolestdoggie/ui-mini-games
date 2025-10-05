@@ -7,12 +7,14 @@ namespace CodeBase.Infrastructure.States
   public class LoadLevelState : IState
   {
     private readonly GameStateMachine _stateMachine;
+    private readonly IConfigsService _configsService;
     private readonly IGameFactory _gameFactory;
     private readonly ICardsService _cardsService;
 
-    public LoadLevelState(GameStateMachine gameStateMachine, IGameFactory gameFactory, ICardsService cardsService)
+    public LoadLevelState(GameStateMachine gameStateMachine, IConfigsService configsService, IGameFactory gameFactory, ICardsService cardsService)
     {
       _stateMachine = gameStateMachine;
+      _configsService = configsService;
       _gameFactory = gameFactory;
       _cardsService = cardsService;
     }
@@ -28,12 +30,16 @@ namespace CodeBase.Infrastructure.States
 
     private void InitLevel()
     {
+      InitConfigs();
       InitHud();
       InitDecks();
       UpdateHudState();
 
       _stateMachine.Enter<GameLoopState>();
     }
+
+    private void InitConfigs() =>
+      _configsService.LoadConfigs();
 
     private void InitHud()
     {
@@ -42,6 +48,9 @@ namespace CodeBase.Infrastructure.States
       hudFacade.transform.SetParent(_gameFactory.UiRoot, false);
     }
 
+    private void InitDecks() =>
+      _cardsService.Init();
+
     private void UpdateHudState()
     {
       HudFacade hudFacade = _gameFactory.HudFacade;
@@ -49,11 +58,6 @@ namespace CodeBase.Infrastructure.States
       hudFacade.UpdateRightDeckCounter(_cardsService.RightDeckCardsAmount);
     }
 
-    private void InitDecks()
-    {
-      _cardsService.Init();
-    }
-    
     public void Exit() {}
   }
 }

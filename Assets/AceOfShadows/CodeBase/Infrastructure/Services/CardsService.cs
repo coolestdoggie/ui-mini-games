@@ -16,19 +16,18 @@ namespace CodeBase.Services
 
         private readonly IGameFactory _gameFactory;
         private readonly ITimeService _timeService;
+        private readonly IConfigsService _configsService;
         private readonly Stack<GameObject> _leftDeckCards = new();
         private readonly Stack<GameObject> _rightDeckCards = new();
         private GameObject _tempCard;
 
-        private const float DeckYOffset = 12f;
-        private const int RealCardsThreshold = 5;
-        private const int InitialCardsAmount = 33;
 
-        public CardsService(IGameFactory gameFactory, ITimeService timeService)
+        public CardsService(IGameFactory gameFactory, ITimeService timeService, IConfigsService configsService)
         {
             _gameFactory = gameFactory;
             _timeService = timeService;
-            
+            _configsService = configsService;
+
             _timeService.SecondTick += MoveCardFromLeftToRight;
         }
 
@@ -41,12 +40,12 @@ namespace CodeBase.Services
         private void InitializeLeftDeck()
         {
             float currentOffset = 0;
-            for (int i = 0; i < InitialCardsAmount; i++)
+            for (int i = 0; i < _configsService.DecksConfig.InitialCardsAmount; i++)
             {
-                if (i < RealCardsThreshold)
+                if (i < _configsService.DecksConfig.RealCardsThreshold)
                 {
                     CreateAndPositionCard(currentOffset);
-                    currentOffset += DeckYOffset;
+                    currentOffset += _configsService.DecksConfig.DeckYOffset;
                 }
 
                 LeftDeckCardsAmount++;
@@ -86,11 +85,11 @@ namespace CodeBase.Services
 
         private void HandleCardMovement()
         {
-            if (LeftDeckCardsAmount <= RealCardsThreshold && RightDeckCardsAmount <= RealCardsThreshold)
+            if (LeftDeckCardsAmount <= _configsService.DecksConfig.RealCardsThreshold && RightDeckCardsAmount <= _configsService.DecksConfig.RealCardsThreshold)
                 MoveRealCard();
-            else if (LeftDeckCardsAmount > RealCardsThreshold && RightDeckCardsAmount < RealCardsThreshold)
+            else if (LeftDeckCardsAmount > _configsService.DecksConfig.RealCardsThreshold && RightDeckCardsAmount < _configsService.DecksConfig.RealCardsThreshold)
                 CreateAndMoveNewCard();
-            else if (LeftDeckCardsAmount <= RealCardsThreshold && RightDeckCardsAmount >= RealCardsThreshold)
+            else if (LeftDeckCardsAmount <= _configsService.DecksConfig.RealCardsThreshold && RightDeckCardsAmount >= _configsService.DecksConfig.RealCardsThreshold)
                 RepositionRealCard();
             else
                 MoveFakeCard();
@@ -141,7 +140,7 @@ namespace CodeBase.Services
         {
             card.transform.SetParent(_gameFactory.HudFacade.RightDeckTransform);
             Vector3 targetPosition = _rightDeckCards.Count > 0
-                ? _rightDeckCards.Peek().transform.localPosition - new Vector3(0, DeckYOffset, 0)
+                ? _rightDeckCards.Peek().transform.localPosition - new Vector3(0, _configsService.DecksConfig.DeckYOffset, 0)
                 : Vector3.zero;
             AnimateCardMovement(card, targetPosition);
             _rightDeckCards.Push(card);
