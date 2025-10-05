@@ -9,6 +9,7 @@ namespace Games.LoadingMenu.CodeBase.Infrastructure.States
   {
     private const string AceOfShadowsSceneName = "AceOfShadows";
     private const string MagicWordsSceneName = "MagicWords";
+    private const string PhoenixFlameSceneName = "PhoenixFlame";
     private readonly LoadingMenuGameStateMachine _loadingMenuGameStateMachine;
     private readonly IGameFactory _gameFactory;
     private Menu _menu;
@@ -41,6 +42,7 @@ namespace Games.LoadingMenu.CodeBase.Infrastructure.States
 
     private void SwitchToPhoenixFlameScene()
     {
+      SceneManager.LoadScene(PhoenixFlameSceneName);
       _loadingMenuGameStateMachine.Enter<EndState>();
     }
 

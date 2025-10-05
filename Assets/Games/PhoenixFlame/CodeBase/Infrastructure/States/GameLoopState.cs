@@ -32,6 +32,7 @@ namespace Games.PhoenixFlame.CodeBase.Infrastructure.States
 
     public void Exit()
     {
+      _gameFactory.UiRoot.ChangeFireColorButton.onClick.RemoveListener(ChangeFireColor);
     }
   }
 }
