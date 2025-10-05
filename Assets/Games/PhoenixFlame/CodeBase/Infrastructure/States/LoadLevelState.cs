@@ -17,6 +17,7 @@ namespace Games.PhoenixFlame.CodeBase.Infrastructure.States
     public void Enter()
     {
       InitUIRoot();
+      CreateFire();
       
       _stateMachine.Enter<GameLoopState>();
     }
@@ -24,6 +25,11 @@ namespace Games.PhoenixFlame.CodeBase.Infrastructure.States
     private void InitUIRoot()
     {
       _gameFactory.CreateUIRoot();
+    }
+
+    private void CreateFire()
+    {
+      _gameFactory.CreateFire();
     }
 
     public void Exit() {}
