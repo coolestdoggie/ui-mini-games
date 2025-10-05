@@ -11,8 +11,6 @@ namespace MagicWords.CodeBase.Infrastructure
     {
       _game = new Game();
       _game.StateMachine.Enter<BootstrapState>();
-
-      DontDestroyOnLoad(this);
     }
   }
 }
