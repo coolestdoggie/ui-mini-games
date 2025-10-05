@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeBase.Services
+namespace AceOfShadows.CodeBase.Infrastructure.Services
 {
     public interface ICardsService : IService
     {

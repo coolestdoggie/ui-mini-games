@@ -1,6 +1,6 @@
-﻿using CodeBase.UI.Services.Factory;
+﻿using AceOfShadows.CodeBase.UI.Services.Factory;
 
-namespace CodeBase.Infrastructure.States
+namespace AceOfShadows.CodeBase.Infrastructure.States
 {
     public class EndState : IState
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace CodeBase.UI.Services.Factory
+namespace AceOfShadows.CodeBase.UI.Services.Factory
 {
   public class GameFactory : IGameFactory
   {

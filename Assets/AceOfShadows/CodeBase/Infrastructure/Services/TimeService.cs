@@ -1,7 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 
-namespace CodeBase.Services
+namespace AceOfShadows.CodeBase.Infrastructure.Services
 {
     public class TimeService : ITimeService
     {

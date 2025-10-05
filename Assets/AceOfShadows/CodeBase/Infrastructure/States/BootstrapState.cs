@@ -1,7 +1,7 @@
-﻿using CodeBase.Services;
-using CodeBase.UI.Services.Factory;
+﻿using AceOfShadows.CodeBase.Infrastructure.Services;
+using AceOfShadows.CodeBase.UI.Services.Factory;
 
-namespace CodeBase.Infrastructure.States
+namespace AceOfShadows.CodeBase.Infrastructure.States
 {
   public class BootstrapState : IState
   {

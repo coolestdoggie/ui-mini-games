@@ -1,7 +1,7 @@
-﻿using CodeBase.Infrastructure.States;
+﻿using AceOfShadows.CodeBase.Infrastructure.States;
 using UnityEngine;
 
-namespace CodeBase.Infrastructure
+namespace AceOfShadows.CodeBase.Infrastructure
 {
   public class GameBootstrapper : MonoBehaviour 
   {

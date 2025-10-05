@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using CodeBase.UI.Services.Factory;
+using AceOfShadows.CodeBase.UI.Services.Factory;
 using DG.Tweening;
 using UnityEngine;
 
-namespace CodeBase.Services
+namespace AceOfShadows.CodeBase.Infrastructure.Services
 {
     public class CardsService : ICardsService
     {

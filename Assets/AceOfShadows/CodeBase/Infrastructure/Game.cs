@@ -1,7 +1,7 @@
-using CodeBase.Infrastructure.States;
-using CodeBase.Services;
+using AceOfShadows.CodeBase.Infrastructure.Services;
+using AceOfShadows.CodeBase.Infrastructure.States;
 
-namespace CodeBase.Infrastructure
+namespace AceOfShadows.CodeBase.Infrastructure
 {
   public class Game
   {
