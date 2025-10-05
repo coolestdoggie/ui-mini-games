@@ -33,6 +33,10 @@ namespace MagicWords.CodeBase.Infrastructure.States
     {
       _services.RegisterSingle<IGameStateMachine>(_stateMachine);
       _services.RegisterSingle<IGameFactory>(new GameFactory());
+      _services.RegisterSingle<IDialogueFetchService>(new DialogueFetchService());
+      _services.RegisterSingle<IEmojiTranslaterService>(new EmojiTranslaterService());
+      _services.RegisterSingle<IDialogueCreatorService>(new DialogueCreatorService(_services.Single<IGameFactory>(),
+      _services.Single<IEmojiTranslaterService>()));
     }
   }
 }
