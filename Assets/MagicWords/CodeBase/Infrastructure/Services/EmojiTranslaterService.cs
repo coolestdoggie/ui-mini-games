@@ -7,11 +7,11 @@ namespace MagicWords.CodeBase.Infrastructure.Services
     private readonly Dictionary<string, string> emojiMap = new()
     {
       {"satisfied", "😊"},
-      {"intrigued", "🤔"},
-      {"neutral", "😐"},
-      {"affirmative", "👍"},
+      {"intrigued", "😋"},
+      {"neutral", "😉"},
+      {"affirmative", "😁"},
       {"laughing", "😂"},
-      {"win", "🏆"}
+      {"win", "😎"}
     };
     
     public string ReplaceEmojis(string text)
