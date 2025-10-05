@@ -8,9 +8,7 @@ namespace LoadingMenu.CodeBase.Infrastructure.States
 {
     public class LoadingMenuGameStateMachine : GameStateMachine
     {
-        public LoadingMenuGameStateMachine(AllServices services) : base(services)
-        {
-        }
+        public LoadingMenuGameStateMachine(AllServices services) : base(services) {}
         
         protected override void InitializeStates(AllServices services)
         {
@@ -19,7 +17,7 @@ namespace LoadingMenu.CodeBase.Infrastructure.States
                 [typeof(BootstrapState)] = new BootstrapState(this, services),
                 [typeof(LoadLevelState)] = new LoadLevelState(this, services.Single<IGameFactory>()),
                 [typeof(GameLoopState)] = new GameLoopState(this, services.Single<IGameFactory>()),
-                [typeof(EndState)] = new EndState(this),
+                [typeof(EndState)] = new EndState(),
             };
         }
     }

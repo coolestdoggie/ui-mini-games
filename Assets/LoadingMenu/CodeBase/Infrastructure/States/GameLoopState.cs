@@ -8,6 +8,8 @@ namespace LoadingMenu.CodeBase.Infrastructure.States
 {
   public class GameLoopState : IState
   {
+    private const string AceOfShadowsSceneName = "AceOfShadows";
+    private const string MagicWordsSceneName = "MagicWords";
     private readonly LoadingMenuGameStateMachine _loadingMenuGameStateMachine;
     private readonly IGameFactory _gameFactory;
     private Menu _menu;
@@ -26,23 +28,21 @@ namespace LoadingMenu.CodeBase.Infrastructure.States
       _menu.PhoenixFlameGameButton.onClick.AddListener(SwitchToPhoenixFlameScene);
     }
 
-    private void SwitchToScene(string sceneName)
+  private void SwitchToAceShadowsScene()
     {
-      SceneManager.LoadScene(sceneName);
+      SceneManager.LoadScene(AceOfShadowsSceneName);
       _loadingMenuGameStateMachine.Enter<EndState>();
-    }
-    private void SwitchToAceShadowsScene()
-    {
-      SceneManager.LoadScene("AceOfShadows");
     }
     
     private void SwitchToMagicWordsScene()
     {
-      SceneManager.LoadScene("MagicWords");
+      SceneManager.LoadScene(MagicWordsSceneName);
+      _loadingMenuGameStateMachine.Enter<EndState>();
     }
 
     private void SwitchToPhoenixFlameScene()
     {
+      _loadingMenuGameStateMachine.Enter<EndState>();
     }
 
     public void Exit()
