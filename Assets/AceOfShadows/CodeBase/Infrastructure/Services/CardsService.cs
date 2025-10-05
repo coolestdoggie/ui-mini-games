@@ -1,21 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using CodeBase.UI.Services.Factory;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace CodeBase.Services
 {
-    public class DeckData
-    {
-    }
-
     public class CardsService : ICardsService
     {
+        public event Action<int, int> CardMovedToRightDeck;
+        
         private readonly IGameFactory _gameFactory;
         private readonly ITimeService _timeService;
         private Stack<GameObject> _leftDeckCards = new();
         private Stack<GameObject> _rightDeckCards = new();
+        private const float deckYOffset  = 12;
 
         public CardsService(IGameFactory gameFactory, ITimeService timeService)
         {
@@ -30,33 +28,30 @@ namespace CodeBase.Services
             if (_leftDeckCards.Count <= 0)
             {
                 Debug.Log("[CardsService] Deck is Empty, moving is ignored");
+                _timeService.SecondTick -= MoveLastCardFromLeftDeckToRight;
                 return;
             }
             
-            GameObject card = _leftDeckCards.Pop();
-
+            GameObject poppedCard = _leftDeckCards.Pop();
+            
             GameObject rightDeckLastCard = null;
             if (_rightDeckCards.Count > 0)
-            {
                 rightDeckLastCard = _rightDeckCards.Peek();
-            }
             
-            _rightDeckCards.Push(card);
-            card.transform.SetParent(_gameFactory.HudFacade.RightDeckTransform, false);
-
+            _rightDeckCards.Push(poppedCard);
+            
+            poppedCard.transform.SetParent(_gameFactory.HudFacade.RightDeckTransform, false);
+            
             if (rightDeckLastCard != null)
-            {
-                card.transform.localPosition = rightDeckLastCard.transform.localPosition + new Vector3(0, -12, 0);
-            }
+                poppedCard.transform.localPosition = rightDeckLastCard.transform.localPosition - new Vector3(0, deckYOffset, 0);
             else
-            {
-                card.transform.localPosition = Vector2.zero;
-            }
+                poppedCard.transform.localPosition = Vector2.zero;
+            
+            CardMovedToRightDeck?.Invoke(_leftDeckCards.Count, _rightDeckCards.Count);
         }
 
         public void CreateLeftDeck()
         {
-            const float yOffset = 12;
             float currentOffset = 0;
             for (int i = 0; i < 10; i++)
             {
@@ -66,7 +61,7 @@ namespace CodeBase.Services
 
                 _leftDeckCards.Push(card);
 
-                currentOffset += yOffset;
+                currentOffset += deckYOffset;
             }
         }
     }
