@@ -9,7 +9,6 @@ namespace Games.MagicWords.CodeBase.Infrastructure.Services
   {
     private readonly IGameFactory _gameFactory;
     private readonly IEmojiTranslaterService _emojiTranslaterService;
-    private List<DialogueEntry> _dialogues;
     private Dictionary<string, AvatarData> _nameByAvatarData;
 
     public DialogueCreatorService(IGameFactory gameFactory, IEmojiTranslaterService emojiTranslaterService)
@@ -20,10 +19,7 @@ namespace Games.MagicWords.CodeBase.Infrastructure.Services
 
     public void CreateDialogue(List<DialogueEntry> dialogues, Dictionary<string, AvatarData> nameByAvatarData)
     {
-      _dialogues = dialogues;
       _nameByAvatarData = nameByAvatarData;
-
-      Transform contentRoot = _gameFactory.ContentRoot;
 
       foreach (DialogueEntry entry in dialogues)
       {

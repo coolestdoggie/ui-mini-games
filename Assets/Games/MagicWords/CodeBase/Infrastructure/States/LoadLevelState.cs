@@ -23,24 +23,20 @@ namespace Games.MagicWords.CodeBase.Infrastructure.States
     public void Enter()
     {
       InitUIRoot();
-      InitLevel();
+      InitScene();
     }
 
-    private void InitUIRoot()
-    {
+    private void InitUIRoot() =>
       _gameFactory.CreateUIRoot();
-    }
 
-    private async void InitLevel()
+    private async void InitScene()
     {
       await FetchDialogueData();
       _dialogueCreatorService.CreateDialogue(_dialogueFetchService.Dialogues, _dialogueFetchService.NameByAvatarData);
     }
 
-    private async UniTask FetchDialogueData()
-    {
+    private async UniTask FetchDialogueData() => 
       await _dialogueFetchService.FetchDialogueDataAsync();
-    }
 
     public void Exit() {}
   }

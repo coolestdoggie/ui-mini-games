@@ -10,28 +10,30 @@ namespace Games.MagicWords.CodeBase.Infrastructure.Services
 {
   public class DialogueFetchService : IDialogueFetchService
   {
+    private const string GetDialogueDataEndpoint = "https://private-624120-softgamesassignment.apiary-mock.com/v3/magicwords";
     public Dictionary<string, AvatarData> NameByAvatarData { get; } = new();
     public List<DialogueEntry> Dialogues { get; private set; } = new();
     
 
     public async UniTask FetchDialogueDataAsync()
     {
-      using (UnityWebRequest request = UnityWebRequest.Get("https://private-624120-softgamesassignment.apiary-mock.com/v3/magicwords"))
+      using (UnityWebRequest request = UnityWebRequest.Get(GetDialogueDataEndpoint))
       {
-        var operation = await request.SendWebRequest().ToUniTask();
+        await request.SendWebRequest().ToUniTask();
 
         if (request.result != UnityWebRequest.Result.Success)
         {
-          Debug.LogError($"Failed to fetch data: {request.error}");
+          Debug.LogError($"[DialogueFetchService] Failed to fetch data: {request.error}");
           return;
         }
+        
         try
         {
           DialogueData data = JsonUtility.FromJson<DialogueData>(request.downloadHandler.text);
 
           if (data == null || data.dialogue == null || data.avatars == null)
           {
-            Debug.LogError("Invalid or missing data in response.");
+            Debug.LogError("[DialogueFetchService] Invalid or missing data in response.");
             return;
           }
 
@@ -49,14 +51,14 @@ namespace Games.MagicWords.CodeBase.Infrastructure.Services
               }
               catch (Exception e)
               {
-                Debug.LogError($"Avatar couldn't be loaded: {e.Message}");
+                Debug.LogError($"[DialogueFetchService] Avatar couldn't be loaded: {e.Message}");
               }
             }
           }
         }
         catch (Exception e)
         {
-          Debug.LogError($"JSON parsing error: {e.Message}");
+          Debug.LogError($"[DialogueFetchService] JSON parsing error: {e.Message}");
         }
       }
     }
@@ -73,7 +75,7 @@ namespace Games.MagicWords.CodeBase.Infrastructure.Services
           return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.one * 0.5f);
         }
 
-        Debug.LogWarning($"Failed to load avatar from {url}: {request.error}");
+        Debug.LogWarning($"[DialogueFetchService] Failed to load avatar from {url}: {request.error}");
         return null;
       }
     }

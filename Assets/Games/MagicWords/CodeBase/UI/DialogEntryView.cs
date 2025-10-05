@@ -10,12 +10,7 @@ namespace Games.MagicWords.CodeBase.UI
     [SerializeField] private Image _avatar;
     [SerializeField] private TMP_Text _message;
     [SerializeField] private HorizontalLayoutGroup _horizontalLayoutGroup;
-
-    public void SetName(string name)
-    {
-      _name.text = name;
-    }
-  
+    
     public void SetAvatar(Sprite sprite)
     {
       if (sprite == null)
@@ -26,6 +21,9 @@ namespace Games.MagicWords.CodeBase.UI
     
       _avatar.sprite = sprite;
     }
+
+    public void SetName(string name) =>
+      _name.text = name;
 
     public void SetMessage(string message) => 
       _message.text = message;
