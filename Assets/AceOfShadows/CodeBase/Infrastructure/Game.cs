@@ -1,5 +1,7 @@
 using AceOfShadows.CodeBase.Infrastructure.Services;
 using AceOfShadows.CodeBase.Infrastructure.States;
+using Common.Services;
+using Common.States;
 
 namespace AceOfShadows.CodeBase.Infrastructure
 {
@@ -9,7 +11,7 @@ namespace AceOfShadows.CodeBase.Infrastructure
 
     public Game()
     {
-      StateMachine = new GameStateMachine(AllServices.Container);
+      StateMachine = new AceOfShadowsGameStateMachine(AllServices.Container);
     }
   }
 }

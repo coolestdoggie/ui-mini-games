@@ -1,6 +1,8 @@
 ﻿using AceOfShadows.CodeBase.Infrastructure.Services;
+using AceOfShadows.CodeBase.Infrastructure.States;
+using Common.Services;
 
-namespace AceOfShadows.CodeBase.Infrastructure.States
+namespace Common.States
 {
   public interface IGameStateMachine : IService
   {

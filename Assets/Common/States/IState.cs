@@ -1,4 +1,4 @@
-﻿namespace AceOfShadows.CodeBase.Infrastructure.States
+﻿namespace Common.States
 {
   public interface IState: IExitableState
   {

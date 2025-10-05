@@ -1,4 +1,6 @@
-﻿namespace AceOfShadows.CodeBase.Infrastructure.Services
+﻿using Common.Services;
+
+namespace AceOfShadows.CodeBase.Infrastructure.Services
 {
     public interface IConfigsService : IService
     {

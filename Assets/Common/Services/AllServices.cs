@@ -1,4 +1,4 @@
-namespace AceOfShadows.CodeBase.Infrastructure.Services
+namespace Common.Services
 {
   public class AllServices
   {

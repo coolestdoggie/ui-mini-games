@@ -1,6 +1,7 @@
 ﻿using AceOfShadows.CodeBase.Infrastructure.Services;
 using AceOfShadows.CodeBase.UI;
 using AceOfShadows.CodeBase.UI.Services.Factory;
+using Common.States;
 
 namespace AceOfShadows.CodeBase.Infrastructure.States
 {

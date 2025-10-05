@@ -1,28 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using AceOfShadows.CodeBase.Infrastructure.Services;
-using AceOfShadows.CodeBase.UI.Services.Factory;
+using AceOfShadows.CodeBase.Infrastructure.States;
+using Common.Services;
 
-namespace AceOfShadows.CodeBase.Infrastructure.States
+namespace Common.States
 {
-  public class GameStateMachine : IGameStateMachine
+  public abstract class GameStateMachine : IGameStateMachine
   {
-    private Dictionary<Type, IExitableState> _states;
+    protected Dictionary<Type, IExitableState> _states;
     private IExitableState _activeState;
 
-    public GameStateMachine(AllServices services)
+    protected GameStateMachine(AllServices services)
     {
-      _states = new Dictionary<Type, IExitableState>
-      {
-        [typeof(BootstrapState)] = new BootstrapState(this, services),
-        [typeof(LoadLevelState)] = new LoadLevelState(this, services.Single<IConfigsService>(),
-          services.Single<IGameFactory>(), services.Single<ICardsService>()),
-        [typeof(GameLoopState)] = new GameLoopState(this,services.Single<ITimeService>(),
-          services.Single<ICardsService>(), services.Single<IGameFactory>()),
-        [typeof(EndState)] = new EndState(services.Single<IGameFactory>()),
-      };
+      InitializeStates(services);
     }
-    
+
+    protected abstract void InitializeStates(AllServices services);
+
     public void Enter<TState>() where TState : class, IState
     {
       IState state = ChangeState<TState>();

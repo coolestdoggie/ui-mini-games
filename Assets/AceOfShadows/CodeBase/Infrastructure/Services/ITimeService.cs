@@ -1,4 +1,5 @@
 using System;
+using Common.Services;
 
 namespace AceOfShadows.CodeBase.Infrastructure.Services
 {
