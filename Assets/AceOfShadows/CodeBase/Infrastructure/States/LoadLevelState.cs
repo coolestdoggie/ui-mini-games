@@ -23,13 +23,13 @@ namespace AceOfShadows.CodeBase.Infrastructure.States
     public void Enter()
     {
       InitUIRoot();
-      InitLevel(); 
+      InitScene(); 
     }
 
     private void InitUIRoot() => 
       _gameFactory.CreateUIRoot();
 
-    private void InitLevel()
+    private void InitScene()
     {
       InitConfigs();
       InitHud();
@@ -45,8 +45,7 @@ namespace AceOfShadows.CodeBase.Infrastructure.States
     private void InitHud()
     {
       _gameFactory.CreateHud();
-      HudFacade hudFacade = _gameFactory.HudFacade;
-      hudFacade.transform.SetParent(_gameFactory.UiRoot, false);
+      _gameFactory.HudFacade.transform.SetParent(_gameFactory.UiRoot, false);
     }
 
     private void InitDecks() =>

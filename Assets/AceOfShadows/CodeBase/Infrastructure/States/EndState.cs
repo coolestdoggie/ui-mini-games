@@ -12,13 +12,9 @@ namespace AceOfShadows.CodeBase.Infrastructure.States
             _gameFactory = gameFactory;
         }
 
-        public void Enter()
-        {
+        public void Enter() =>
             _gameFactory.HudFacade.SetActiveEndLabel(true);
-        }
-        
-        public void Exit()
-        {
-        }
+
+        public void Exit() {}
     }
 }
