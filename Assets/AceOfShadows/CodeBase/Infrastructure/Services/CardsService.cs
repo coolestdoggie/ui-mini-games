@@ -9,163 +9,148 @@ namespace CodeBase.Services
     public class CardsService : ICardsService
     {
         public event Action<int, int> CardMovedToRightDeck;
-        
+
         public int LeftDeckCardsAmount { get; private set; }
         public int RightDeckCardsAmount { get; private set; }
-        
+
         private readonly IGameFactory _gameFactory;
         private readonly ITimeService _timeService;
-        
-        private Stack<GameObject> _leftDeckCards = new();
-        private Stack<GameObject> _rightDeckCards = new();
+        private readonly Stack<GameObject> _leftDeckCards = new();
+        private readonly Stack<GameObject> _rightDeckCards = new();
         private GameObject _tempCard;
-        
-        private const float DeckYOffset  = 12;
+
+        private const float DeckYOffset = 12f;
         private const int RealCardsThreshold = 5;
-        private const int InitialCardsAmount = 144;
+        private const int InitialCardsAmount = 33;
 
         public CardsService(IGameFactory gameFactory, ITimeService timeService)
         {
             _gameFactory = gameFactory;
             _timeService = timeService;
-
-            _timeService.SecondTick += MoveLastCardFromLeftDeckToRight;
+            
+            _timeService.SecondTick += MoveCardFromLeftToRight;
         }
 
         public void Init()
         {
-            InitDecks();
-            InitTempCard();
+            InitializeLeftDeck();
+            InitializeTempCard();
         }
 
-        private void InitDecks()
+        private void InitializeLeftDeck()
         {
             float currentOffset = 0;
             for (int i = 0; i < InitialCardsAmount; i++)
             {
-                var needToSpawnRealCard = i < RealCardsThreshold;
-                if (needToSpawnRealCard)
+                if (i < RealCardsThreshold)
                 {
-                    GameObject card = _gameFactory.CreateCard();
-                    card.transform.SetParent(_gameFactory.HudFacade.LeftDeckTransform, false);
-                    card.transform.localPosition = new Vector3(0, card.transform.localPosition.y - currentOffset, 0);
-
-                    _leftDeckCards.Push(card);
-                    LeftDeckCardsAmount++;
-
+                    CreateAndPositionCard(currentOffset);
                     currentOffset += DeckYOffset;
                 }
-                else
-                {
-                    LeftDeckCardsAmount++;
-                }
+
+                LeftDeckCardsAmount++;
             }
 
             RightDeckCardsAmount = 0;
         }
 
-        private void InitTempCard()
+        private void CreateAndPositionCard(float yOffset)
+        {
+            GameObject card = _gameFactory.CreateCard();
+            card.transform.SetParent(_gameFactory.HudFacade.LeftDeckTransform, false);
+            card.transform.localPosition = new Vector3(0, card.transform.localPosition.y - yOffset, 0);
+            _leftDeckCards.Push(card);
+        }
+
+        private void InitializeTempCard()
         {
             _tempCard = _gameFactory.CreateCard();
             _tempCard.transform.SetParent(_gameFactory.HudFacade.transform, false);
             _tempCard.SetActive(false);
         }
 
-        private void MoveLastCardFromLeftDeckToRight(int _)
+        private void MoveCardFromLeftToRight(int _)
         {
             if (LeftDeckCardsAmount <= 0)
             {
-                Debug.Log("[CardsService] Deck is Empty, moving is ignored");
-                _timeService.SecondTick -= MoveLastCardFromLeftDeckToRight;
+                Debug.Log("[CardsService] Left deck is empty. Stopping card movement.");
+                _timeService.SecondTick -= MoveCardFromLeftToRight;
                 return;
             }
 
-            if (LeftDeckCardsAmount < RealCardsThreshold && RightDeckCardsAmount < RealCardsThreshold)
-                MoveRealCardsFromLeftDeck();
-            else if (LeftDeckCardsAmount >= RealCardsThreshold && RightDeckCardsAmount < RealCardsThreshold)
-                InstantiateRealCardForRightDeck();
-            else if (LeftDeckCardsAmount <= RealCardsThreshold && RightDeckCardsAmount >= RealCardsThreshold)
-                MoveRealCardToRightDeckPosition();
-            else
-                MoveFakeCards();
-
+            HandleCardMovement();
             CardMovedToRightDeck?.Invoke(LeftDeckCardsAmount, RightDeckCardsAmount);
         }
 
-        private void MoveRealCardsFromLeftDeck()
+        private void HandleCardMovement()
         {
-            GameObject poppedCard = _leftDeckCards.Pop();
-            LeftDeckCardsAmount--;
-            
-            GameObject rightDeckLastCard = null;
-            if (_rightDeckCards.Count > 0)
-                rightDeckLastCard = _rightDeckCards.Peek();
-            
-            _rightDeckCards.Push(poppedCard);
-            RightDeckCardsAmount++;
-            
-            poppedCard.transform.SetParent(_gameFactory.HudFacade.RightDeckTransform, false);
-
-            if (rightDeckLastCard != null)
-            {
-                poppedCard.transform.DOLocalMove(rightDeckLastCard.transform.localPosition - new Vector3(0, DeckYOffset, 0), 0.5f);
-            }
+            if (LeftDeckCardsAmount <= RealCardsThreshold && RightDeckCardsAmount <= RealCardsThreshold)
+                MoveRealCard();
+            else if (LeftDeckCardsAmount > RealCardsThreshold && RightDeckCardsAmount < RealCardsThreshold)
+                CreateAndMoveNewCard();
+            else if (LeftDeckCardsAmount <= RealCardsThreshold && RightDeckCardsAmount >= RealCardsThreshold)
+                RepositionRealCard();
             else
-                poppedCard.transform.localPosition = Vector2.zero;
+                MoveFakeCard();
         }
 
-        private void InstantiateRealCardForRightDeck()
+        private void MoveRealCard()
         {
-            var lastRealCardInLeftDeck = _leftDeckCards.Peek();
-            
-            var newCard = _gameFactory.CreateCard();
+            GameObject card = _leftDeckCards.Pop();
+            UpdateDeckCounts();
+            MoveCardToRightDeck(card);
+        }
+
+        private void CreateAndMoveNewCard()
+        {
+            GameObject newCard = _gameFactory.CreateCard();
             newCard.transform.SetParent(_gameFactory.HudFacade.RightDeckTransform, false);
-            newCard.transform.position = lastRealCardInLeftDeck.transform.position;
-            LeftDeckCardsAmount--;
-            
-            GameObject rightDeckLastCard = null;
-            if (_rightDeckCards.Count > 0)
-                rightDeckLastCard = _rightDeckCards.Peek();
-            
+            newCard.transform.position = _leftDeckCards.Peek().transform.position;
+            UpdateDeckCounts();
+            MoveCardToRightDeck(newCard);
             _rightDeckCards.Push(newCard);
-            RightDeckCardsAmount++;
-
-            if (rightDeckLastCard != null)
-                newCard.transform.DOLocalMove(rightDeckLastCard.transform.localPosition - new Vector3(0, DeckYOffset, 0), 0.5f);
-            else
-                newCard.transform.DOLocalMove(Vector2.zero, 0.5f);
         }
 
-        private void MoveRealCardToRightDeckPosition()
+        private void RepositionRealCard()
         {
-            GameObject poppedCard = _leftDeckCards.Pop();
-            LeftDeckCardsAmount--;
+            GameObject card = _leftDeckCards.Pop();
+            UpdateDeckCounts();
+            card.transform.SetParent(_gameFactory.HudFacade.RightDeckTransform);
             
-            GameObject rightDeckLastCard = null;
-            if (_rightDeckCards.Count > 0)
-                rightDeckLastCard = _rightDeckCards.Peek();
-            
-            RightDeckCardsAmount++;
-            
-            poppedCard.transform.SetParent(_gameFactory.HudFacade.RightDeckTransform);
-            if (rightDeckLastCard != null)
-                poppedCard.transform.DOMove(rightDeckLastCard.transform.position, 0.5f);
+            AnimateCardMovement(card,
+                _rightDeckCards.Count > 0 ? _rightDeckCards.Peek().transform.localPosition : Vector3.zero);
         }
 
-        private void MoveFakeCards()
+        private void MoveFakeCard()
         {
-            var lastRealCardInLeftDeck = _leftDeckCards.Peek();
-            var lastRealCardInRightDeck = _rightDeckCards.Peek();
-            
-            _tempCard.transform.position = lastRealCardInLeftDeck.transform.position;
+            UpdateDeckCounts();
+            _tempCard.transform.position = _leftDeckCards.Peek().transform.position;
             _tempCard.SetActive(true);
-            _tempCard.transform
-                .DOMove(lastRealCardInRightDeck.transform.position, 0.5f)
-                .OnComplete(() => _tempCard.SetActive(false));
-            
-            
+            AnimateCardMovement(_tempCard, _rightDeckCards.Peek().transform.position, () => _tempCard.SetActive(false));
+        }
+
+        private void UpdateDeckCounts()
+        {
             LeftDeckCardsAmount--;
             RightDeckCardsAmount++;
+        }
+
+        private void MoveCardToRightDeck(GameObject card)
+        {
+            card.transform.SetParent(_gameFactory.HudFacade.RightDeckTransform);
+            Vector3 targetPosition = _rightDeckCards.Count > 0
+                ? _rightDeckCards.Peek().transform.localPosition - new Vector3(0, DeckYOffset, 0)
+                : Vector3.zero;
+            AnimateCardMovement(card, targetPosition);
+            _rightDeckCards.Push(card);
+        }
+
+        private void AnimateCardMovement(GameObject card, Vector3 targetPosition, Action onComplete = null)
+        {
+            if (onComplete != null)
+                card.transform.DOMove(targetPosition, 0.5f).OnComplete(() => onComplete());
+            else
+                card.transform.DOLocalMove(targetPosition, 0.5f);
         }
     }
 }
