@@ -18,9 +18,11 @@ namespace CodeBase.Services
         
         private Stack<GameObject> _leftDeckCards = new();
         private Stack<GameObject> _rightDeckCards = new();
+        private GameObject _tempCard;
         
         private const float DeckYOffset  = 12;
-        private const int RealCardsThreshold = 10;
+        private const int RealCardsThreshold = 5;
+        private const int InitialCardsAmount = 144;
 
         public CardsService(IGameFactory gameFactory, ITimeService timeService)
         {
@@ -30,12 +32,19 @@ namespace CodeBase.Services
             _timeService.SecondTick += MoveLastCardFromLeftDeckToRight;
         }
 
-        public void InitCards()
+        public void Init()
+        {
+            InitDecks();
+            InitTempCard();
+        }
+
+        private void InitDecks()
         {
             float currentOffset = 0;
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < InitialCardsAmount; i++)
             {
-                if (i < RealCardsThreshold)
+                var needToSpawnRealCard = i < RealCardsThreshold;
+                if (needToSpawnRealCard)
                 {
                     GameObject card = _gameFactory.CreateCard();
                     card.transform.SetParent(_gameFactory.HudFacade.LeftDeckTransform, false);
@@ -53,6 +62,13 @@ namespace CodeBase.Services
             }
 
             RightDeckCardsAmount = 0;
+        }
+
+        private void InitTempCard()
+        {
+            _tempCard = _gameFactory.CreateCard();
+            _tempCard.transform.SetParent(_gameFactory.HudFacade.transform, false);
+            _tempCard.SetActive(false);
         }
 
         private void MoveLastCardFromLeftDeckToRight(int _)
@@ -138,6 +154,16 @@ namespace CodeBase.Services
 
         private void MoveFakeCards()
         {
+            var lastRealCardInLeftDeck = _leftDeckCards.Peek();
+            var lastRealCardInRightDeck = _rightDeckCards.Peek();
+            
+            _tempCard.transform.position = lastRealCardInLeftDeck.transform.position;
+            _tempCard.SetActive(true);
+            _tempCard.transform
+                .DOMove(lastRealCardInRightDeck.transform.position, 0.5f)
+                .OnComplete(() => _tempCard.SetActive(false));
+            
+            
             LeftDeckCardsAmount--;
             RightDeckCardsAmount++;
         }

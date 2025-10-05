@@ -51,7 +51,7 @@ namespace CodeBase.Infrastructure.States
 
     private void InitDecks()
     {
-      _cardsService.InitCards();
+      _cardsService.Init();
     }
     
     public void Exit() {}
