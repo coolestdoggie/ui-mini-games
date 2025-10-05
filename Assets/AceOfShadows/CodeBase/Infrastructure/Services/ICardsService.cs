@@ -4,9 +4,9 @@ namespace CodeBase.Services
 {
     public interface ICardsService : IService
     {
-        void InitDecks();
+        void InitCards();
         event Action<int, int> CardMovedToRightDeck;
-        int LeftDeckCarsAmount { get; }
+        int LeftDeckCardsAmount { get; }
         int RightDeckCardsAmount { get; }
     }
 }

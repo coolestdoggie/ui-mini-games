@@ -45,19 +45,15 @@ namespace CodeBase.Infrastructure.States
     private void UpdateHudState()
     {
       HudFacade hudFacade = _gameFactory.HudFacade;
-      hudFacade.UpdateLeftDeckCounter(_cardsService.LeftDeckCarsAmount);
+      hudFacade.UpdateLeftDeckCounter(_cardsService.LeftDeckCardsAmount);
       hudFacade.UpdateRightDeckCounter(_cardsService.RightDeckCardsAmount);
     }
 
     private void InitDecks()
     {
-      _cardsService.InitDecks();
+      _cardsService.InitCards();
     }
     
-    public void Exit()
-    {
-      
-    }
-    
+    public void Exit() {}
   }
 }
