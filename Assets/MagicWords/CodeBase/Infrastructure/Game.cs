@@ -1,8 +1,8 @@
 using Common.Services;
 using Common.States;
-using MagicWords.CodeBase.Infrustructure.States;
+using MagicWords.CodeBase.Infrastructure.States;
 
-namespace MagicWords.CodeBase.Infrustructure
+namespace MagicWords.CodeBase.Infrastructure
 {
   public class Game
   {

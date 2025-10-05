@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using AceOfShadows.CodeBase.Infrastructure.Services;
-using AceOfShadows.CodeBase.Infrastructure.States;
 using Common.Services;
 
 namespace Common.States
