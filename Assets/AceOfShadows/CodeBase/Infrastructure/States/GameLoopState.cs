@@ -7,11 +7,13 @@ namespace CodeBase.Infrastructure.States
   {
     private readonly GameStateMachine _stateMachine;
     private readonly ITimeService _timeService;
+    private readonly ICardsService _cardsService;
 
-    public GameLoopState(GameStateMachine stateMachine, ITimeService timeService)
+    public GameLoopState(GameStateMachine stateMachine, ITimeService timeService, ICardsService cardsService)
     {
       _stateMachine = stateMachine;
       _timeService = timeService;
+      _cardsService = cardsService;
     }
 
     public void Enter()
