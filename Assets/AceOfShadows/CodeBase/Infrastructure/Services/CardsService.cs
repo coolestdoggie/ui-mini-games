@@ -9,8 +9,12 @@ namespace CodeBase.Services
     {
         public event Action<int, int> CardMovedToRightDeck;
         
+        public int LeftDeckCarsAmount { get; private set; }
+        public int RightDeckCardsAmount { get; private set; }
+        
         private readonly IGameFactory _gameFactory;
         private readonly ITimeService _timeService;
+        
         private Stack<GameObject> _leftDeckCards = new();
         private Stack<GameObject> _rightDeckCards = new();
         private const float deckYOffset  = 12;
@@ -23,34 +27,7 @@ namespace CodeBase.Services
             _timeService.SecondTick += MoveLastCardFromLeftDeckToRight;
         }
 
-        private void MoveLastCardFromLeftDeckToRight(int _)
-        {
-            if (_leftDeckCards.Count <= 0)
-            {
-                Debug.Log("[CardsService] Deck is Empty, moving is ignored");
-                _timeService.SecondTick -= MoveLastCardFromLeftDeckToRight;
-                return;
-            }
-            
-            GameObject poppedCard = _leftDeckCards.Pop();
-            
-            GameObject rightDeckLastCard = null;
-            if (_rightDeckCards.Count > 0)
-                rightDeckLastCard = _rightDeckCards.Peek();
-            
-            _rightDeckCards.Push(poppedCard);
-            
-            poppedCard.transform.SetParent(_gameFactory.HudFacade.RightDeckTransform, false);
-            
-            if (rightDeckLastCard != null)
-                poppedCard.transform.localPosition = rightDeckLastCard.transform.localPosition - new Vector3(0, deckYOffset, 0);
-            else
-                poppedCard.transform.localPosition = Vector2.zero;
-            
-            CardMovedToRightDeck?.Invoke(_leftDeckCards.Count, _rightDeckCards.Count);
-        }
-
-        public void CreateLeftDeck()
+        public void InitDecks()
         {
             float currentOffset = 0;
             for (int i = 0; i < 10; i++)
@@ -63,6 +40,52 @@ namespace CodeBase.Services
 
                 currentOffset += deckYOffset;
             }
+
+            LeftDeckCarsAmount = _leftDeckCards.Count;
+            RightDeckCardsAmount = 0;
+        }
+
+        private void MoveLastCardFromLeftDeckToRight(int _)
+        {
+            if (_leftDeckCards.Count <= 0)
+            {
+                Debug.Log("[CardsService] Deck is Empty, moving is ignored");
+                _timeService.SecondTick -= MoveLastCardFromLeftDeckToRight;
+                return;
+            }
+
+            if (_rightDeckCards.Count < 10)
+                MoveRealCards();
+            else
+                MoveFakeCards();
+
+            CardMovedToRightDeck?.Invoke(LeftDeckCarsAmount, RightDeckCardsAmount);
+        }
+
+        private void MoveRealCards()
+        {
+            GameObject poppedCard = _leftDeckCards.Pop();
+            LeftDeckCarsAmount--;
+            
+            GameObject rightDeckLastCard = null;
+            if (_rightDeckCards.Count > 0)
+                rightDeckLastCard = _rightDeckCards.Peek();
+            
+            _rightDeckCards.Push(poppedCard);
+            RightDeckCardsAmount++;
+            
+            poppedCard.transform.SetParent(_gameFactory.HudFacade.RightDeckTransform, false);
+            
+            if (rightDeckLastCard != null)
+                poppedCard.transform.localPosition = rightDeckLastCard.transform.localPosition - new Vector3(0, deckYOffset, 0);
+            else
+                poppedCard.transform.localPosition = Vector2.zero;
+        }
+
+        private void MoveFakeCards()
+        {
+            LeftDeckCarsAmount--;
+            RightDeckCardsAmount++;
         }
     }
 }

@@ -29,7 +29,8 @@ namespace CodeBase.Infrastructure.States
     private void InitLevel()
     {
       InitHud();
-      InitLeftDeck();
+      InitDecks();
+      UpdateHudState();
 
       _stateMachine.Enter<GameLoopState>();
     }
@@ -41,9 +42,16 @@ namespace CodeBase.Infrastructure.States
       hudFacade.transform.SetParent(_gameFactory.UiRoot, false);
     }
 
-    private void InitLeftDeck()
+    private void UpdateHudState()
     {
-      _cardsService.CreateLeftDeck();
+      HudFacade hudFacade = _gameFactory.HudFacade;
+      hudFacade.UpdateLeftDeckCounter(_cardsService.LeftDeckCarsAmount);
+      hudFacade.UpdateRightDeckCounter(_cardsService.RightDeckCardsAmount);
+    }
+
+    private void InitDecks()
+    {
+      _cardsService.InitDecks();
     }
     
     public void Exit()
