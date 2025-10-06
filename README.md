@@ -46,6 +46,8 @@ The flow of the every game starts in the GameBootstrap class that creates Game S
 - LoadScene State (The state that instantiates and constructs an object that we need in the game)
 - GameLoop etc.
 
+<img width="911" height="456" alt="image" src="https://github.com/user-attachments/assets/339b551d-f130-472a-9fb6-83bf9ecb0522" />
+
 Another important thing to discuss is the Service Locator pattern. It's the Dependency Injection implementation. I thought importing Zenject or some kind of DI framework would be bloated for such a small project, so I've decided to use the manual-written one. The game uses the concept of Services. Services are objects that handle one responsibility of a game. For example in these games you will find:
 
 - Game Factory Service
