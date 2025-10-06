@@ -32,7 +32,7 @@ High-level layers
 - Launcher / Entry: `LoadingMenu` provides a single entry point and scene that can navigate to individual game scenes. Treat it as the shell that selects and loads game scenes.
 - Game Scenes: Each game lives in `Assets/Games/<GameName>/Scenes` and contains the root scene that implements that game's flow (UI + small gameplay loop).
 - Game Module: Under `Assets/Games/<GameName>/CodeBase` you will find assembly definitions (`*.asmdef`) and subfolders (UI, Infrastructure, Data, etc.). Each game's code is scoped to its asmdef to limit cross-game coupling.
-- Shared Services & Common: `Assets/Common` contains shared assemblies and runtime services (for example `Services`, `States`, and `Utils` folders). Common contains a `Common.asmdef` so shared code compiles into a well-scoped assembly.
+- Shared Services & Common: `Assets/Common`. Common contains a `Common.asmdef` so shared code compiles into a well-scoped assembly.
 - Plugins / 3rd-party: `Assets/Plugins` holds external libraries (for example `Demigiant`/DOTween and `UniTask`).
 
 The project is based on Component Service architecture.
