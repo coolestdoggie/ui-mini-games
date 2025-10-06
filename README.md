@@ -10,6 +10,9 @@ Included games (each has its own scene and assembly definitions):
 - `PhoenixFlame` — located at `Assets/Games/PhoenixFlame` (entry scene: `Assets/Games/PhoenixFlame/Scenes/PhoenixFlame.unity`).
 - `LoadingMenu` — a launcher/menu for the collection: `Assets/Games/LoadingMenu/Scenes/LoadingMenu.unity`.
 
+## Test The Build
+You can test a WebGL build here: https://play.unity.com/en/games/928c8dbe-83f5-44c8-a99a-9a12c5ee9a8a/ui-mini-games
+
 ## Unity Editor Version
 
 Unity 6000.2.6f2
