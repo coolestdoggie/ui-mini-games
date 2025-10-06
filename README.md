@@ -23,9 +23,6 @@ Unity 6000.2.6f2
 - `Assets/` — Unity assets and game code. Main subfolders:
   - `Games/` — each game's Scenes, CodeBase, and UI.
   - `Common/`, `Resources/`, `Plugins/`, etc. — shared assets and utilities.
-- `ProjectSettings/` — Unity project settings and configuration.
-- `Packages/` — package manifest and package cache.
-- `.sln` and `.csproj` files — Visual Studio solution and project files for code editing.
 
 ## Architecture
 
